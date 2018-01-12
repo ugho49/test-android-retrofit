@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import fr.ughostephan.myappretrofit.R;
 import fr.ughostephan.myappretrofit.model.Post;
 import fr.ughostephan.myappretrofit.util.LoremPicsum;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
  * Created by ughostephan on 10/01/2018.
@@ -78,6 +79,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             Picasso.with(context)
                     .load(LoremPicsum.getRandomImageUrl())
+                    .transform(new CropCircleTransformation())
                     .placeholder(R.drawable.placeholder)
                     .error(R.drawable.placeholder)
                     .into(itemImage);

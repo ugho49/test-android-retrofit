@@ -25,6 +25,7 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     // JSON Converter
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'jp.wasabeef:picasso-transformations:2.1.2'
     // ButterKnife
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
