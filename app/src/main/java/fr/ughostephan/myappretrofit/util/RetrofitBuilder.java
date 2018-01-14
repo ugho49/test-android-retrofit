@@ -59,6 +59,29 @@ public class RetrofitBuilder {
         return retrofit.create(service);
     }
 
+    public static <T> T createServiceWithAuth(Class<T> service /*, final TokenManager tokenManager*/){
+
+        OkHttpClient newClient = client.newBuilder().addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+
+                Request request = chain.request();
+                Request.Builder builder = request.newBuilder();
+
+//                if(tokenManager.getToken().getAccessToken() != null){
+//                    builder.addHeader("Authorization", "Bearer " + tokenManager.getToken().getAccessToken());
+//                }
+
+                request = builder.build();
+                return chain.proceed(request);
+            }
+        }).build();
+
+        Retrofit newRetrofit = retrofit.newBuilder().client(newClient).build();
+        return newRetrofit.create(service);
+
+    }
+
     public static Retrofit getRetrofit() {
         return retrofit;
     }
