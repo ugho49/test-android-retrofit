@@ -2,12 +2,12 @@ package fr.ughostephan.myappretrofit.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -16,8 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import fr.ughostephan.myappretrofit.R;
-import fr.ughostephan.myappretrofit.adapter.OnItemRecyclerClickListener;
-import fr.ughostephan.myappretrofit.adapter.PostRecyclerViewAdapter;
+import fr.ughostephan.myappretrofit.adapter.PostListViewAdapter;
 import fr.ughostephan.myappretrofit.model.Comment;
 import fr.ughostephan.myappretrofit.model.Post;
 import fr.ughostephan.myappretrofit.service.PostService;
@@ -26,18 +25,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainFragment extends Fragment implements OnItemRecyclerClickListener {
+public class SecondFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    @BindView(R.id.recyclerview_products)
-    RecyclerView recyclerViewProducts;
+    @BindView(R.id.listview_products)
+    ListView listviewProducts;
 
-    private PostRecyclerViewAdapter postAdapter;
     private Call<List<Post>> callPosts;
     private Call<List<Comment>> callComments;
     private PostService postService;
+    private PostListViewAdapter postAdapter;
     private Unbinder unbinder;
 
-    public MainFragment() {
+    public SecondFragment() {
         // Required empty public constructor
     }
 
@@ -50,34 +49,21 @@ public class MainFragment extends Fragment implements OnItemRecyclerClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_second, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recyclerViewProducts.setHasFixedSize(true);
-
-        // use a linear layout manager
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerViewProducts.setLayoutManager(mLayoutManager);
-
         // specify an adapter (see also next example)
-        postAdapter = new PostRecyclerViewAdapter(getContext());
-        postAdapter.setOnItemClickListener(this);
-        recyclerViewProducts.setAdapter(postAdapter);
+        postAdapter = new PostListViewAdapter(getContext());
+        listviewProducts.setAdapter(postAdapter);
 
         // Get Post Service
         postService = RetrofitBuilder.createService(PostService.class);
         getPosts();
 
-        return view;
-    }
+        // Set listView Click item Listener
+        listviewProducts.setOnItemClickListener(this);
 
-    @Override
-    public void onItemClick(Object item) {
-        Post postClicked = (Post) item;
-        Toast.makeText(getContext(), "Post " + postClicked.getId() + " Clicked", Toast.LENGTH_LONG).show();
-        getCommentsForPost(postClicked);
+        return view;
     }
 
     private void getPosts() {
@@ -86,7 +72,7 @@ public class MainFragment extends Fragment implements OnItemRecyclerClickListene
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 if (response.isSuccessful()) {
-                    postAdapter.setPosts(response.body());
+                    postAdapter.setPostsList(response.body());
                     postAdapter.notifyDataSetChanged();
                 } else {
                     Log.w(getTag(), "response in error : " + response);
@@ -95,7 +81,7 @@ public class MainFragment extends Fragment implements OnItemRecyclerClickListene
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-                Log.w(getTag(), "onFailure: " + t.getMessage() );
+                Log.w(getTag(), "onFailure: " + t.getMessage());
             }
         });
     }
@@ -114,16 +100,23 @@ public class MainFragment extends Fragment implements OnItemRecyclerClickListene
 
             @Override
             public void onFailure(Call<List<Comment>> call, Throwable t) {
-                Log.w(getTag(), "onFailure: " + t.getMessage() );
+                Log.w(getTag(), "onFailure: " + t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Post postClicked = postAdapter.getItem(position);
+        Toast.makeText(getContext(), "Post " + postClicked.getId() + " Clicked", Toast.LENGTH_LONG).show();
+        getCommentsForPost(postClicked);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
 
-        if(callPosts != null){
+        if (callPosts != null) {
             callPosts.cancel();
             callPosts = null;
         }

@@ -4,10 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_products"
+    <ListView
+        android:id="@+id/listview_products"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_recyclerview_post" />
+        android:dividerHeight="0dp"
+        android:divider="@null"
+        tools:listitem="@layout/item_listview_post" />
 
 </RelativeLayout>

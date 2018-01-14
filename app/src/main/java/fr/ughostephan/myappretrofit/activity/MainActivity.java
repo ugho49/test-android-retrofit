@@ -11,12 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.ughostephan.myappretrofit.R;
 import fr.ughostephan.myappretrofit.fragment.MainFragment;
 import fr.ughostephan.myappretrofit.fragment.OtherFragment;
+import fr.ughostephan.myappretrofit.fragment.SecondFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -94,18 +96,16 @@ public class MainActivity extends AppCompatActivity
 
         Fragment newFragment = null;
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_posts_recyclerview) {
             newFragment = new MainFragment();
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_posts_listview) {
+            newFragment = new SecondFragment();
+        } else if (id == R.id.nav_other_fragment) {
             newFragment = new OtherFragment();
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
         } else if (id == R.id.nav_share) {
-
+            Toast.makeText(this, "Click on share button", Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_send) {
-
+            Toast.makeText(this, "Click on send button", Toast.LENGTH_LONG).show();
         }
 
         if (newFragment != null) {

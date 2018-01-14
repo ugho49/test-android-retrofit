@@ -23,19 +23,19 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 /**
  * Created by ughostephan on 10/01/2018.
  */
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerViewAdapter.ViewHolder> {
 
     private List<Post> postsList = new ArrayList<>();
-    private OnItemClickListener onItemClickListener;
+    private OnItemRecyclerClickListener onItemClickListener;
     private Context context;
 
-    public PostAdapter(Context context) {
+    public PostRecyclerViewAdapter(Context context) {
         this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recyclerview_post, parent, false);
         return new ViewHolder(v);
     }
 
@@ -46,11 +46,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Post post = postsList.get(position);
-        holder.bind(context, post, onItemClickListener);
+        holder.bind(context, postsList.get(position), onItemClickListener);
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(OnItemRecyclerClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -72,14 +71,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             ButterKnife.bind(this, view);
         }
 
-        void bind(final Context context, final Post post, final OnItemClickListener listener) {
+        void bind(final Context context, final Post post, final OnItemRecyclerClickListener listener) {
 
             itemTitle.setText(post.getTitle());
             itemContent.setText(post.getBody());
 
             Picasso.with(context)
                     .load(LoremPicsum.getRandomImageUrl())
-                    .transform(new CropCircleTransformation())
+//                    .transform(new CropCircleTransformation())
                     .placeholder(R.drawable.placeholder)
                     .error(R.drawable.placeholder)
                     .into(itemImage);
